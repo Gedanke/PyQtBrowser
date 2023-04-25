@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 
-"""
-Module implementing WebView.
-"""
-import sys
+
 from PyQt5.QtCore import pyqtSlot, QUrl, QEvent, Qt, QObject
 from PyQt5.QtWidgets import QMainWindow, QApplication, QTabWidget, QMessageBox, QWidget, QVBoxLayout, QCompleter
 from PyQt5.QtGui import QStandardItemModel
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEngineSettings
-from Ui_ui import Ui_MainWindow
+from .ui import UiMainWindow
 
 
 class NewWebView(QWebEngineView):
@@ -22,7 +19,7 @@ class NewWebView(QWebEngineView):
         return new_webview
 
 
-class WebView(QMainWindow, Ui_MainWindow):
+class WebView(QMainWindow, UiMainWindow):
     """
     Class documentation goes here.
     """
@@ -30,7 +27,7 @@ class WebView(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         """
         Constructor
-        
+
         @param parent reference to the parent widget
         @type QWidget
         """
@@ -49,12 +46,12 @@ class WebView(QMainWindow, Ui_MainWindow):
         self.tabWidget.tabCloseRequested.connect(self.closeTab)
         self.tabWidget.currentChanged.connect(self.tabChange)
         self.view = NewWebView(self)
-        self.view.load(QUrl("https://www.hao123.com"))
+        self.view.load(QUrl("https://www.nowcoder.com/"))
         self.newTab(self.view)
         self.lineEdit.installEventFilter(self)
         self.lineEdit.setMouseTracking(True)
         settings = QWebEngineSettings.defaultSettings()
-        settings.setAttribute(QWebEngineSettings.PluginsEnabled, True)
+        settings.setAttribute(QWebEngineSettings.WebAttribute.PluginsEnabled, True)
         # settings.setAttribute(QWebEngineSettings.JavascriptEnabled, True)
         self.getModel()
 
@@ -230,7 +227,7 @@ class WebView(QMainWindow, Ui_MainWindow):
         """
         Slot documentation goes here.
         """
-        homeurl = QUrl("http://www.xdbcb8.com")
+        homeurl = QUrl("https://www.sogou.com/")
         if self.tabWidget.currentWidget().title() == "about:blank":
             self.tabWidget.currentWidget().load(homeurl)
         else:
@@ -240,10 +237,3 @@ class WebView(QMainWindow, Ui_MainWindow):
 
     def __del__(self):
         self.view.deleteLater()
-
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    wv = WebView()
-    wv.show()
-    sys.exit(app.exec_())
