@@ -7,6 +7,12 @@ from PyQt5.QtGui import QStandardItemModel
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEngineSettings
 from .ui import UiMainWindow
 
+'''
+https://bot.sannysoft.com/
+https://www.crunchbase.com/app/search/companies/
+https://www.imperva.com/products/advanced-bot-protection-management/?redirect=Distil
+'''
+
 
 class NewWebView(QWebEngineView):
     def __init__(self, tabWidget):
@@ -21,22 +27,23 @@ class NewWebView(QWebEngineView):
 
 class WebView(QMainWindow, UiMainWindow):
     """
-    Class documentation goes here.
+
     """
 
     def __init__(self, parent=None):
         """
-        Constructor
 
-        @param parent reference to the parent widget
-        @type QWidget
+        :param parent:
         """
         super(WebView, self).__init__(parent)
         self.setupUi(self)
         self.initUi()
 
     def initUi(self):
+        """
 
+        :return:
+        """
         self.progressBar.hide()
         self.showMaximized()
         # self.tabWidget.setTabShape(QTabWidget.Triangular)
@@ -46,7 +53,7 @@ class WebView(QMainWindow, UiMainWindow):
         self.tabWidget.tabCloseRequested.connect(self.closeTab)
         self.tabWidget.currentChanged.connect(self.tabChange)
         self.view = NewWebView(self)
-        self.view.load(QUrl("https://www.nowcoder.com/"))
+        self.view.load(QUrl("https://www.xuexi.cn/"))
         self.newTab(self.view)
         self.lineEdit.installEventFilter(self)
         self.lineEdit.setMouseTracking(True)
@@ -56,12 +63,21 @@ class WebView(QMainWindow, UiMainWindow):
         self.getModel()
 
     def getModel(self):
+        """
+
+        :return:
+        """
         self.m_model = QStandardItemModel(0, 1, self)
         m_completer = QCompleter(self.m_model, self)
         self.lineEdit.setCompleter(m_completer)
         m_completer.activated[str].connect(self.onUrlChoosed)
 
     def newTab(self, view):
+        """
+
+        :param view:
+        :return:
+        """
         self.pb_forward.setEnabled(False)
         self.pb_back.setEnabled(False)
         view.titleChanged.connect(self.webTitle)
@@ -77,10 +93,20 @@ class WebView(QMainWindow, UiMainWindow):
         self.tabWidget.setCurrentWidget(view)
 
     def getUrl(self, webview):
+        """
+
+        :param webview:
+        :return:
+        """
         url = webview.url().toString()
         return url
 
     def closeTab(self, index):
+        """
+
+        :param index:
+        :return:
+        """
         if self.tabWidget.count() > 1:
             self.tabWidget.widget(index).deleteLater()
             self.tabWidget.removeTab(index)
@@ -89,13 +115,22 @@ class WebView(QMainWindow, UiMainWindow):
             self.on_pb_new_clicked()
 
     def tabChange(self, index):
+        """
 
+        :param index:
+        :return:
+        """
         currentView = self.tabWidget.widget(index)
         if currentView:
             currentViewUrl = self.getUrl(currentView)
             self.lineEdit.setText(currentViewUrl)
 
     def closeEvent(self, event):
+        """
+
+        :param event:
+        :return:
+        """
         tabNum = self.tabWidget.count()
         closeInfo = "你打开了{}个标签页，现在确认关闭？".format(tabNum)
         if tabNum > 1:
@@ -109,6 +144,12 @@ class WebView(QMainWindow, UiMainWindow):
             event.accept()
 
     def eventFilter(self, object, event):
+        """
+
+        :param object:
+        :param event:
+        :return:
+        """
         if object == self.lineEdit:
             if event.type() == QEvent.MouseButtonRelease:
                 self.lineEdit.selectAll()
@@ -118,26 +159,51 @@ class WebView(QMainWindow, UiMainWindow):
         return QObject.eventFilter(self, object, event)
 
     def webTitle(self, title):
+        """
+
+        :param title:
+        :return:
+        """
         index = self.tabWidget.currentIndex()
         if len(title) > 16:
             title = title[0:17]
         self.tabWidget.setTabText(index, title)
 
     def webIcon(self, icon):
+        """
+
+        :param icon:
+        :return:
+        """
         index = self.tabWidget.currentIndex()
         self.tabWidget.setTabIcon(index, icon)
 
     def webProgress(self, progress):
+        """
+
+        :param progress:
+        :return:
+        """
         self.progressBar.show()
         self.progressBar.setValue(progress)
 
     def webProgressEnd(self, isFinished):
+        """
+
+        :param isFinished:
+        :return:
+        """
         if isFinished:
             self.progressBar.setValue(100)
             self.progressBar.hide()
             self.progressBar.setValue(0)
 
     def webHistory(self, url):
+        """
+
+        :param url:
+        :return:
+        """
         self.lineEdit.setText(url.toString())
         index = self.tabWidget.currentIndex()
         currentView = self.tabWidget.currentWidget()
@@ -154,13 +220,28 @@ class WebView(QMainWindow, UiMainWindow):
                 self.pb_forward.setEnabled(True)
 
     def showUrl(self, url):
+        """
+
+        :param url:
+        :return:
+        """
         self.statusBar.showMessage(url)
 
     def onUrlChoosed(self, url):
+        """
+
+        :param url:
+        :return:
+        """
         self.lineEdit.setText(url)
 
     @pyqtSlot(str)
     def on_lineEdit_textChanged(self, text):
+        """
+
+        :param text:
+        :return:
+        """
 
         urlGroup = text.split(".")
 
@@ -176,7 +257,8 @@ class WebView(QMainWindow, UiMainWindow):
     @pyqtSlot()
     def on_pb_new_clicked(self):
         """
-        Slot documentation goes here.
+
+        :return:
         """
         newView = NewWebView(self)
         self.newTab(newView)
@@ -185,35 +267,40 @@ class WebView(QMainWindow, UiMainWindow):
     @pyqtSlot()
     def on_pb_forward_clicked(self):
         """
-        Slot documentation goes here.
+
+        :return:
         """
         self.tabWidget.currentWidget().forward()
 
     @pyqtSlot()
     def on_pb_back_clicked(self):
         """
-        Slot documentation goes here.
+
+        :return:
         """
         self.tabWidget.currentWidget().back()
 
     @pyqtSlot()
     def on_pb_refresh_clicked(self):
         """
-        Slot documentation goes here.
+
+        :return:
         """
         self.tabWidget.currentWidget().reload()
 
     @pyqtSlot()
     def on_pb_stop_clicked(self):
         """
-        Slot documentation goes here.
+
+        :return:
         """
         self.tabWidget.currentWidget().stop()
 
     @pyqtSlot()
     def on_pb_go_clicked(self):
         """
-        Slot documentation goes here.
+
+        :return:
         """
         url = self.lineEdit.text()
         if url[0:7] == "http://" or url[0:8] == "https://":
@@ -225,7 +312,8 @@ class WebView(QMainWindow, UiMainWindow):
     @pyqtSlot()
     def on_pb_home_clicked(self):
         """
-        Slot documentation goes here.
+
+        :return:
         """
         homeurl = QUrl("https://www.sogou.com/")
         if self.tabWidget.currentWidget().title() == "about:blank":

@@ -18,6 +18,11 @@ photos_path = {
 
 class UiMainWindow(object):
     def setupUi(self, MainWindow):
+        """
+
+        :param MainWindow:
+        :return:
+        """
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1001, 658)
         self.centralWidget = QtWidgets.QWidget(MainWindow)
@@ -104,6 +109,11 @@ class UiMainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
+        """
+
+        :param MainWindow:
+        :return:
+        """
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "基于 PyQt 的简易浏览器"))
         self.pb_new.setText(_translate("MainWindow", "新页面"))
